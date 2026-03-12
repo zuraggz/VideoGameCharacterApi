@@ -47,6 +47,17 @@ namespace VideoGameCharacterApi.Data
 
             // ანალოგიურად აქავ იგივე.
 
+            modelBuilder.Entity<PokemonOwner>()
+                .HasKey(po=> new {  po.PokemonId, po.OwnerId });
+
+            modelBuilder.Entity<PokemonOwner>().HasOne(o => o.Owner) // ენთითის აქვს ერთი owner
+                .WithMany(o=> o.PokemonOwners)// owner-ს აქვს  ბევრი PokemonOwner
+                .HasForeignKey(o => o.OwnerId); // foreign key
+
+            modelBuilder.Entity<PokemonOwner>()
+                .HasOne(p=> p.Pokemon).WithMany(p=>p.PokemonOwners).HasForeignKey(p=>p.PokemonId);  
+
+
         }
 
 
