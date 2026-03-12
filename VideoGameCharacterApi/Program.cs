@@ -2,6 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using PokemonReviewApp;
 using Scalar.AspNetCore;
 using VideoGameCharacterApi.Data;
+using VideoGameCharacterApi.Interfaces;
+using VideoGameCharacterApi.Repository;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -12,6 +14,7 @@ builder.Services.AddOpenApi();
 builder.Services.AddDbContext<DataContext>(options => options.UseSqlServer(builder.Configuration
     .GetConnectionString("DefaultConnection")));
 builder.Services.AddTransient<Seed>(); // moved before Build()
+builder.Services.AddScoped<IPokemonRepository, PokemonRepository>();
 
 var app = builder.Build();
 
