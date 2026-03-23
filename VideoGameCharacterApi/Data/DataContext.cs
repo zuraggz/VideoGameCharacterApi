@@ -55,8 +55,10 @@ namespace VideoGameCharacterApi.Data
                 .HasForeignKey(o => o.OwnerId); // foreign key
 
             modelBuilder.Entity<PokemonOwner>()
-                .HasOne(p=> p.Pokemon).WithMany(p=>p.PokemonOwners).HasForeignKey(p=>p.PokemonId);  
-
+                .HasOne(p=> p.Pokemon).WithMany(p=>p.PokemonOwners).HasForeignKey(p=>p.PokemonId);
+            modelBuilder.Entity<Review>()
+                .Property(x => x.Rating)
+                .HasPrecision(18, 2);
 
         }
 

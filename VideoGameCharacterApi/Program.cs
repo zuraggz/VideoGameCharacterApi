@@ -4,6 +4,7 @@ using Scalar.AspNetCore;
 using VideoGameCharacterApi.Data;
 using VideoGameCharacterApi.Interfaces;
 using VideoGameCharacterApi.Repository;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -15,6 +16,9 @@ builder.Services.AddDbContext<DataContext>(options => options.UseSqlServer(build
     .GetConnectionString("DefaultConnection")));
 builder.Services.AddTransient<Seed>(); // moved before Build()
 builder.Services.AddScoped<IPokemonRepository, PokemonRepository>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<ICountryRepository, CountryRepository>();
+builder.Services.AddAutoMapper(cfg => cfg.AddMaps(typeof(Program).Assembly));
 
 var app = builder.Build();
 
