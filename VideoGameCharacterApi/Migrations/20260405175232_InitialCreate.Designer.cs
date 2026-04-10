@@ -12,8 +12,8 @@ using VideoGameCharacterApi.Data;
 namespace VideoGameCharacterApi.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20260313080239_ChangeRatingToDecimal")]
-    partial class ChangeRatingToDecimal
+    [Migration("20260405175232_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -155,6 +155,7 @@ namespace VideoGameCharacterApi.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("Rating")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("ReviewerId")

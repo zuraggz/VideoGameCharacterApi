@@ -64,6 +64,41 @@ namespace VideoGameCharacterApi.Controllers
             return Ok(result);
         }
 
-        
+        [HttpPost]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        public IActionResult CreateReviewer([FromBody] ReviewerDto reviewer)
+        {
+            if (reviewer == null)
+            {
+                return BadRequest();
+            }
+
+            var ReviewerCount = _reviewerRepository
+                .GetReviewers().Where(c => c.LastName.Trim().ToUpper() == reviewer.LastName.Trim().ToUpper()).FirstOrDefault();
+
+            if (ReviewerCount != null)
+            {
+                ModelState.AddModelError("", "Reviewer already exsists");
+                return StatusCode(422, ModelState);
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var mapped = _mapper.Map<Reviewer>(reviewer);
+            if (!_reviewerRepository.CreateReviewer(mapped))
+            {
+                ModelState.AddModelError("", "Something went wrong");
+                return StatusCode(500, ModelState);
+            }
+
+            return Ok("Reviewer Created Successfully");
+
+        }
+
+
     }
 }

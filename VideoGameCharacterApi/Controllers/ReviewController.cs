@@ -74,5 +74,39 @@ namespace VideoGameCharacterApi.Controllers
             }
             return Ok(result);
         }
+        [HttpPost]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        public IActionResult CreateReview([FromBody] ReviewDto review)
+        {
+            if (review == null)
+            {
+                return BadRequest();
+            }
+
+            var ReviewCount = _reviewRepository
+                .GetReviews().Where(c => c.Title.Trim().ToUpper() == review.Title.Trim().ToUpper()).FirstOrDefault();
+
+            if (ReviewCount != null)
+            {
+                ModelState.AddModelError("", "Review already exsists");
+                return StatusCode(422, ModelState);
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var mapped = _mapper.Map<Review>(review);
+            if (!_reviewRepository.CreateReview(mapped))
+            {
+                ModelState.AddModelError("", "Something went wrong");
+                return StatusCode(500, ModelState);
+            }
+
+            return Ok("Review Created Successfully");
+
+        }
     }
 }

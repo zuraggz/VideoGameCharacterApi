@@ -68,7 +68,43 @@ namespace VideoGameCharacterApi.Controllers
             return Ok(countries);
         }
 
-        
+        [HttpPost]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        public IActionResult CreateCountry([FromBody]CountryDto country)
+        {
+            if(country == null)
+            {
+                return BadRequest();
+            }
+
+            var CountryCount= _countryRepository
+                .GetCountries().Where(c=>c.Name.Trim().ToUpper()==country.Name.Trim().ToUpper()).FirstOrDefault();
+
+            if(CountryCount != null)
+            {
+                ModelState.AddModelError("", "Country already exsists");
+                return StatusCode(422, ModelState);
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var mapped = _mapper.Map<Country>(country);
+            if (!_countryRepository.CreateCountry(mapped))
+            {
+                ModelState.AddModelError("", "Something went wrong");
+                return StatusCode(500, ModelState);
+            }
+
+            return Ok("Country Created Successfully");
+
+        }
+
+
+
 
     }
 }

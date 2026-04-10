@@ -70,6 +70,40 @@ namespace VideoGameCharacterApi.Controllers
 
             return Ok(rating);
         }
+        [HttpPost]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        public IActionResult CreatePokemon([FromBody] PokemonDto pokemon)
+        {
+            if (pokemon == null)
+            {
+                return BadRequest();
+            }
+
+            var PokemonCount = _pokemonRepository
+                .GetPokemons().Where(c => c.Name.Trim().ToUpper() == pokemon.Name.Trim().ToUpper()).FirstOrDefault();
+
+            if (PokemonCount != null)
+            {
+                ModelState.AddModelError("", "Pokemon already exsists");
+                return StatusCode(422, ModelState);
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var mapped = _mapper.Map<Pokemon>(pokemon);
+            if (!_pokemonRepository.CreatePokemon(mapped))
+            {
+                ModelState.AddModelError("", "Something went wrong");
+                return StatusCode(500, ModelState);
+            }
+
+            return Ok("Pokemon Created Successfully");
+
+        }
 
     }
 }

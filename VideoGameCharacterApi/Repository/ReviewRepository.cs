@@ -1,4 +1,5 @@
-﻿using VideoGameCharacterApi.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using VideoGameCharacterApi.Data;
 using VideoGameCharacterApi.Interfaces;
 using VideoGameCharacterApi.Models;
 
@@ -12,6 +13,13 @@ namespace VideoGameCharacterApi.Repository
         {
             _dataContext = dataContext;
         }
+
+        public bool CreateReview(Review review)
+        {
+            _dataContext.Reviews.Add(review);
+            return Save();
+        }
+
         public Review GetReview(int reviewId)
         {
             
@@ -31,6 +39,11 @@ namespace VideoGameCharacterApi.Repository
         public bool ReviewExists(int reviewId)
         {
             return _dataContext.Reviews.Any(r=>r.Id == reviewId);
+        }
+        public bool Save()
+        {
+            var result = _dataContext.SaveChanges();
+            return result > 0 ? true : false;
         }
     }
 }

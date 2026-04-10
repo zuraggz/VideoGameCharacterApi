@@ -12,6 +12,12 @@ namespace VideoGameCharacterApi.Repository
             _context= context;
         }
 
+        public bool CreatePokemon(Pokemon pokemon)
+        {
+            _context.Pokemon.Add(pokemon);
+            return Save();
+        }
+
         public Pokemon GetPokemon(int id)
         {
             return _context.Pokemon.Where(p => p.Id == id).FirstOrDefault();
@@ -41,6 +47,11 @@ namespace VideoGameCharacterApi.Repository
         public bool PokemonExists(int pokeId)
         {
             return _context.Pokemon.Any(p=>p.Id == pokeId);
+        }
+        public bool Save()
+        {
+            var result = _context.SaveChanges();
+            return result > 0 ? true : false;
         }
     }
 }

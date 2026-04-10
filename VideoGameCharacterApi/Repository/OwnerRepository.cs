@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Collections.ObjectModel;
 using VideoGameCharacterApi.Data;
 using VideoGameCharacterApi.Interfaces;
 using VideoGameCharacterApi.Models;
@@ -13,6 +14,13 @@ namespace VideoGameCharacterApi.Repository
         {
             _dataContext = dataContext;
         }
+
+        public bool CreateOwner(Owner owner)
+        {
+            _dataContext.Owners.Add(owner);
+            return Save();
+        }
+
         public Owner GetOwner(int ownerId)
         {
             return _dataContext.Owners.Where(o => o.Id == ownerId).FirstOrDefault();
@@ -36,6 +44,11 @@ namespace VideoGameCharacterApi.Repository
         public bool OwnerExists(int ownerId)
         {
             return _dataContext.Owners.Any(o => o.Id == ownerId);
+        }
+        public bool Save()
+        {
+            var result = _dataContext.SaveChanges();
+            return result > 0 ? true : false;
         }
     }
 }

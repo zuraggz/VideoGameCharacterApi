@@ -20,6 +20,12 @@ namespace VideoGameCharacterApi.Repository
             return _context.Countries.Any(c=>c.Id==id);
         }
 
+        public bool CreateCountry(Country country)
+        {
+            _context.Countries.Add(country);
+            return Save();
+        }
+
         public ICollection<Country> GetCountries()
         {
             return _context.Countries.OrderBy(c=>c.Id).ToList();
@@ -38,6 +44,12 @@ namespace VideoGameCharacterApi.Repository
         public ICollection<Owner> GetOwnersFromACountry(int countryId)
         {
             return _context.Owners.Where(c=>c.Country.Id==countryId).ToList();
+        }
+
+        public bool Save()
+        {
+            var result = _context.SaveChanges();
+            return result>0? true: false;
         }
     }
 }

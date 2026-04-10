@@ -66,6 +66,41 @@ namespace VideoGameCharacterApi.Controllers
             return Ok(pokemons);
         }
 
+        [HttpPost]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        public IActionResult CreateCategory([FromBody] CategoryDto categoryCreate)
+        {
+            if(categoryCreate == null)
+            {
+                return BadRequest();
+            }
+            
+            var category_counter= _categoryRepository.
+                GetCategories().Where(c=>c.Name.ToUpper().Trim()==categoryCreate.Name.ToUpper().Trim()).FirstOrDefault();
+
+            if(category_counter != null)
+            {
+                ModelState.AddModelError("", "Category already exsists");
+                return StatusCode(422, ModelState);
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var mapped = _mapper.Map<Category>(categoryCreate);
+
+            if (!_categoryRepository.CreateCategory(mapped))
+            {
+                ModelState.AddModelError("", "Something went wrong");
+                return StatusCode(500, ModelState);
+            }
+
+            return Ok("Succesfully Created");
+        }
+
     }
 
 }

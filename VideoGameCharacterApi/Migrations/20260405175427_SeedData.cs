@@ -5,7 +5,7 @@
 namespace VideoGameCharacterApi.Migrations
 {
     /// <inheritdoc />
-    public partial class ChangeRatingToDecimal : Migration
+    public partial class SeedData : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

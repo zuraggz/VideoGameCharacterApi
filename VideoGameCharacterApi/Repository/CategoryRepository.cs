@@ -1,4 +1,5 @@
-﻿using VideoGameCharacterApi.Data;
+﻿using Azure.Core;
+using VideoGameCharacterApi.Data;
 using VideoGameCharacterApi.Interfaces;
 using VideoGameCharacterApi.Models;
 
@@ -16,7 +17,11 @@ namespace VideoGameCharacterApi.Repository
             return _context.Categories.Any(c => c.Id == id);
         }
 
-        
+        public bool CreateCategory(Category category)
+        {
+            _context.Categories.Add(category);
+            return Save();
+        }
 
         public ICollection<Category> GetCategories()
         {
@@ -33,6 +38,12 @@ namespace VideoGameCharacterApi.Repository
         {
             return _context.PokemonCategories.Where(pc=>pc.CategoryId==categoryId).Select(p=>p.Pokemon).ToList();
             //გადავდივართ პოკემონკატეგორიაში და მოგვაგ ის პოკემონი
+        }
+
+        public bool Save()
+        {
+            var result = _context.SaveChanges();
+            return result> 0? true : false;
         }
     }
 }

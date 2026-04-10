@@ -152,6 +152,7 @@ namespace VideoGameCharacterApi.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("Rating")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("ReviewerId")

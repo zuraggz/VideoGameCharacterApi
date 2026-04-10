@@ -9,5 +9,7 @@ namespace VideoGameCharacterApi.Interfaces
         Country GetCountryByOwner(int ownerId);
         ICollection<Owner> GetOwnersFromACountry(int countryId);
         bool CountryExsists(int id);
+        bool CreateCountry(Country country);
+        bool Save();
     }
 }
